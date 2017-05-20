@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="notes" type="java.lang.Iterable<me.jiangcai.demo.jms.entity.Note>"*/-->
+<head>
+    <meta charset="UTF-8">
+    <title>All Notes</title>
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+        <td>索引</td>
+        <td>文本</td>
+        <td>创建时间</td>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="note:${notes}" class="note">
+        <td th:text="${note.id}" class="id">1</td>
+        <td th:text="${note.text}" class="text">比如</td>
+        <td th:text="${{note.createTime}}">今天</td>
+    </tr>
+    </tbody>
+</table>
+<span id="addSpan" data-url="/add/" th:attr="data-url=@{/}">添加一个新笔记</span>
+
+<script src="http://resali.huobanplus.com/cdn/jquery/2.2.4/jquery.min.js"></script>
+<script>
+    $(function () {
+        var addSpan = $('#addSpan');
+        addSpan.click(function () {
+            var message = prompt('请描述下内容');
+            if (!message || message.length == 0)
+                return;
+            $.ajax(addSpan.attr('data-url'), {
+                method: 'post',
+                data: {
+                    text: message
+                },
+                complete: function () {
+                    location.reload();
+                }
+            });
+        });
+
+        $('.note').click(function () {
+            var message = prompt('请描述下要修改的内容',$('.text',$(this)).text());
+            if (!message || message.length == 0)
+                return;
+
+            $.ajax(addSpan.attr('data-url')+$('.id',$(this)).text(), {
+                method: 'post',
+                data: {
+                    text: message
+                },
+                complete: function () {
+                    location.reload();
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>
